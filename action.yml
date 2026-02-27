@@ -1,0 +1,24 @@
+name: 'Fix It Felix'
+description: 'Auto-fix failed CI builds with AI'
+author: 'NickCirv'
+
+branding:
+  icon: 'tool'
+  color: 'blue'
+
+inputs:
+  anthropic-api-key:
+    description: 'Anthropic API key'
+    required: true
+  auto-push:
+    description: 'Auto-push fixes (default: true)'
+    required: false
+    default: 'true'
+  max-attempts:
+    description: 'Max fix attempts (default: 3)'
+    required: false
+    default: '3'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

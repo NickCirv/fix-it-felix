@@ -1,0 +1,36 @@
+name: CI with Felix
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+
+  felix:
+    name: Fix It Felix
+    needs: build
+    if: failure()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # push fixes
+      pull-requests: write  # comment on PR
+      actions: read         # read job logs
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fix It Felix
+        uses: NickCirv/fix-it-felix@v1
+        with:
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          auto-push: 'true'
+          max-attempts: '3'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
